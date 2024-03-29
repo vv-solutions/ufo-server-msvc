@@ -1,0 +1,7 @@
+quarkus:
+  http:
+    port: 8081
+
+  grpc:
+    server:
+      use-separate-server: false
