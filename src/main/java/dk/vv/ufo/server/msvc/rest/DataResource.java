@@ -1,47 +1,32 @@
 package dk.vv.ufo.server.msvc.rest;
 
-import dk.vv.ufo.server.msvc.dtos.DataDTO;
-import dk.vv.ufo.server.msvc.util.DataGenerator;
+import dk.vv.ufo.server.msvc.dtos.NumberDTO;
+import dk.vv.ufo.server.msvc.dtos.TextDTO;
+import dk.vv.ufo.server.msvc.util.FIleReaderUtil;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.jboss.resteasy.annotations.cache.NoCache;
 
-import java.util.List;
+import java.io.IOException;
 
 @ApplicationScoped
-@Produces("application/json")
+
 @Consumes("application/json")
+@Produces(MediaType.APPLICATION_JSON)
 @Path("/api/")
 public class DataResource {
 
-
-    private final DataGenerator dataGenerator;
-
-
-    @Inject
-    public DataResource(DataGenerator dataGenerator) {
-        this.dataGenerator = dataGenerator;
+    @GET
+    @Path("/number/{number}")
+    public NumberDTO getNumber(@PathParam("number") int number){
+        return new NumberDTO(number);
     }
 
-
     @GET
-    @Path("/data")
-    public List<DataDTO> getData(){
-        return dataGenerator.generateDataDTOS();
-    }
-    @GET
-    @Path("/dataSingle")
+    @Path("/text/")
     @NoCache
-    public DataDTO getDataSingle(){
-        return dataGenerator.generateDataDTO();
+    public TextDTO getText() throws IOException {
+        return new TextDTO(FIleReaderUtil.ReadFile("data/1MiB.txt"));
     }
-
-    @GET
-    @Path("/test")
-    public Response getResource() { return Response.ok("{\"Hello\": \"REST!\"}").build(); }
 }

@@ -1,7 +1,11 @@
+
 quarkus:
+  jib:
+    platforms: linux/arm64/v8
   http:
     port: 8081
-
+  native:
+    resources:
+      includes: data/*.txt
   grpc:
     server:
-      use-separate-server: false

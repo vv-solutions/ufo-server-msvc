@@ -1,86 +1,26 @@
 package dk.vv.ufo.server.msvc.grpc;
 
-import dk.vv.ufo.server.msvc.dtos.DataDTO;
-import dk.vv.ufo.server.msvc.util.DataGenerator;
-import io.grpc.stub.StreamObserver;
+import dk.vv.ufo.server.msvc.util.FIleReaderUtil;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @GrpcService
 public class DataGrpcService implements DataGrpc {
 
-    private final DataGenerator dataGenerator;
-
-    @Inject
-    public DataGrpcService(DataGenerator dataGenerator) {
-        this.dataGenerator = dataGenerator;
-    }
-
-//    @Override
-//    public Uni<DataCollection> getData(Empty request) {
-//
-//        return Uni.createFrom().item(mapToDataCollection(dataGenerator.generateData()));
-//    }
-//
-//
-//    private DataCollection mapToDataCollection(List<DataDTO> list) {
-//        DataCollection.Builder builder =
-//                DataCollection.newBuilder();
-//        list.forEach(d -> builder.addData((mapToData(d))));
-//        return builder.build();
-//    }
-//
-//    private Data mapToData(DataDTO dataDTO) {
-//        Data.Builder builder =
-//                Data.newBuilder();
-//        if (dataDTO != null) {
-//            return builder
-//                    .setStringData(dataDTO.getStringData())
-//                    .setBooleanData(dataDTO.isBooleanData())
-//                    .setIntegerData(dataDTO.getIntegerData())
-//                    .setFloatData(dataDTO.getFloatData())
-//                    .build();
-//        } else {
-//            return null;
-//        }
-//    }
 
     @Override
-    public Uni<DataCollection> getData(Empty request) {
-        return Uni.createFrom().item(dataGenerator.generateDataCollection());
+    public Uni<number> getNumber(number request) {
+        return Uni.createFrom().item(request);
     }
 
     @Override
-    public Uni<Data> getDataSingle(Empty request) {
-        return Uni.createFrom().item(dataGenerator.generateDataSingle()
-        );
-    }
+    public Uni<text> getText(empty request)  {
+        try
+        {
+        return Uni.createFrom().item(text.newBuilder().setData(FIleReaderUtil.ReadFile("data/1MiB.txt")).build());
 
-
-
-
-    private DataCollection mapToDataCollection(List<DataDTO> list) {
-        DataCollection.Builder builder = DataCollection.newBuilder();
-        list.stream()
-                .map(this::mapToData)
-                .forEach(builder::addData);
-        return builder.build();
-    }
-
-    private Data mapToData(DataDTO dataDTO) {
-        if (dataDTO != null) {
-            return Data.newBuilder()
-                    .setStringData(dataDTO.getStringData())
-                    .setBooleanData(dataDTO.isBooleanData())
-                    .setIntegerData(dataDTO.getIntegerData())
-                    .setFloatData(dataDTO.getFloatData())
-                    .build();
-        } else {
-            return null;
+        } catch (Exception e){
+            throw new RuntimeException();
         }
     }
 }
