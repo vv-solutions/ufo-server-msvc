@@ -1,5 +1,6 @@
 
 quarkus:
+
   jib:
     platforms: linux/arm64/v8
   http:
@@ -9,3 +10,4 @@ quarkus:
       includes: data/*.txt
   grpc:
     server:
+      use-separate-server: false
